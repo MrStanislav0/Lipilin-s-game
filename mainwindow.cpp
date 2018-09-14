@@ -3,6 +3,8 @@
 #include "fun.h"
 #include <QThread>
 
+#define PORT_SERVER 15809
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -15,7 +17,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->login_edit,SIGNAL(textChanged(QString)),this,SLOT(ok_enabled()));
 
     socket = new QUdpSocket(this);
-    socket->bind(QHostAddress::AnyIPv4, 65201); // начинаем слушать 65201 порт
+    if (!socket->bind(QHostAddress::AnyIPv4, PORT_SERVER))
+    {
+        QMessageBox::information(this,"Error", "Порт закрыт!");
+    }
+    else
+    {
+        QMessageBox::information(this,"Well", "Порт открыт!");
+    }
     connect(socket, SIGNAL(readyRead()), this, SLOT(NET_datagramm_analysis())); // ловим udаграммыp дейт и анализируем
 
     ui->edit_ip_root->setText(root_address);
@@ -122,7 +131,7 @@ void MainWindow::on_Login_button_clicked()
         QByteArray data;
         data.append("0r");
         data.append(ui->login_edit->text());
-        socket->writeDatagram(data, QHostAddress(root_address), 65201);
+        socket->writeDatagram(data, QHostAddress(root_address), PORT_SERVER);
     }
 
 }
@@ -247,11 +256,10 @@ void MainWindow::then_made_img(QImage img, QString code)
 
 void MainWindow::NET_datagramm_analysis()
 {
-    while(socket->hasPendingDatagrams()!= -1)
+    while(socket->hasPendingDatagrams())
     {
         QByteArray buffer; //Дейтаграмма
         buffer.resize(socket->pendingDatagramSize());
-
         QHostAddress sender; // IP отправителя
         quint16 senderPort; // Port
 
@@ -309,7 +317,7 @@ void MainWindow::NET_datagramm_analysis()
             break;
 
         case 'a':
-            NET_list_of_user_in_game(data);
+            NET_list_of_user_in_game(data, sender);
             break;
 
         case 'I':
@@ -345,7 +353,7 @@ void MainWindow::NET_registration_for_root(QString login, QHostAddress sender)
     QByteArray Data;
     Data.append("1r");
     Data.append(verdict);
-    socket->writeDatagram(Data, sender, 65201);
+    socket->writeDatagram(Data, sender, PORT_SERVER);
 
     if (verdict == "false")
         return;
@@ -358,6 +366,7 @@ void MainWindow::NET_registration_for_root(QString login, QHostAddress sender)
         root_wnd->delete_player(user_list[sender.toString()]);
     }
     user_list[sender.toString()] = login;
+
     NET_a_new_player_come(login, sender.toString());
 
     if ((root_address!="127.0.0.1") && (login != "root"))
@@ -365,7 +374,7 @@ void MainWindow::NET_registration_for_root(QString login, QHostAddress sender)
 
     if (flag_is_it_root)
     {
-        root_wnd->add_new_player(login);
+        //root_wnd->add_new_player(login, sender);
         if (root_wnd->get_flag_game_on())
             NET_send_info_for_player(sender.toString(), messeges, img_code);
     }
@@ -396,16 +405,23 @@ void MainWindow::NET_a_new_player_come(QString new_player_login, QString sender)
         QByteArray Data;
         Data.append("1n");
         Data.append(new_player_login);
-        socket->writeDatagram(Data, temp_addres, 65201);
+        socket->writeDatagram(Data, temp_addres, PORT_SERVER);
     }
 	QThread::msleep(200);
     QByteArray Data;
     Data.append(users);
-    socket->writeDatagram(Data, QHostAddress(sender), 65201);
+    socket->writeDatagram(Data, QHostAddress(sender), PORT_SERVER);
 }
 
-void MainWindow::NET_add_new_player (QString login)
+void MainWindow::NET_add_new_player (QString login, QHostAddress sender)
 {
+    if (user_list[sender.toString()] != "")
+    {
+        home_wnd->delete_player(user_list[sender.toString()]);
+    }
+
+    user_list[sender.toString()] = login;
+
     home_wnd->add_new_player(login);
 }
 
@@ -582,7 +598,7 @@ void MainWindow::NET_send_players_inercept_login(QString login)
     QByteArray Data;
     Data.append("0iyes ");
     Data.append(login);
-    socket->writeDatagram(Data, QHostAddress(root_address), 65201);
+    socket->writeDatagram(Data, QHostAddress(root_address), PORT_SERVER);
     i_overhear_login = login;
 }
 
@@ -608,7 +624,7 @@ void MainWindow::NET_players_intercept_for_root(QString data, QHostAddress sende
     }
 	
     Data.append(sender.toString());
-    socket->writeDatagram(Data, addres, 65201);
+    socket->writeDatagram(Data, addres, PORT_SERVER);
 }
 
 void MainWindow::NET_players_intercept_for_player(QString data)
@@ -644,7 +660,7 @@ void MainWindow::NET_send_intercepted_messege_for_player (QString addres, QStrin
         messege = messege + '0' + ' ';
 
     Data.append(messege);
-    socket->writeDatagram(Data, QHostAddress(addres), 65201);
+    socket->writeDatagram(Data, QHostAddress(addres), PORT_SERVER);
 }
 
 void MainWindow::NET_no_overhere_for_root (QString login)
@@ -652,15 +668,15 @@ void MainWindow::NET_no_overhere_for_root (QString login)
     QByteArray Data;
     Data.append("0ino ");
     Data.append(login);
-    socket->writeDatagram(Data, QHostAddress(root_address), 65201);
+    socket->writeDatagram(Data, QHostAddress(root_address), PORT_SERVER);
 }
 
-void MainWindow::NET_list_of_user_in_game(QString data)
+void MainWindow::NET_list_of_user_in_game(QString data, QHostAddress sender)
 {
     while (data!="")
     {
         QString user = cut_string_befor_simbol(data, ' ');
-        NET_add_new_player(user);
+        NET_add_new_player(user, sender);
     }
 }
 
@@ -673,7 +689,7 @@ void MainWindow::NET_send_info_for_player(QString address, QString &messeges, QS
     QByteArray first_data;
     first_data.append("1S");
     first_data.append(datagramm);
-    socket->writeDatagram(first_data, temp_addres, 65201);
+    socket->writeDatagram(first_data, temp_addres, PORT_SERVER);
 
     // В случае, если игра началась, а пользователь опоздал - сразу шлется старт
     if (root_wnd->get_flag_game_on())
@@ -684,12 +700,12 @@ void MainWindow::NET_send_info_for_player(QString address, QString &messeges, QS
         QByteArray Data2;
         Data2.append("level:");
         Data2.append(s);
-        socket->writeDatagram(Data2, temp_addres, 65201);
+        socket->writeDatagram(Data2, temp_addres, PORT_SERVER);
 
         QThread::msleep(200);
         QByteArray Data;
         Data.append("1g");
-        socket->writeDatagram(Data, temp_addres, 65201);
+        socket->writeDatagram(Data, temp_addres, PORT_SERVER);
     }
 
 }
@@ -829,7 +845,7 @@ void MainWindow::NET_send_rsa_img(QString code, int e, int n, int i, int j)
     {
 		QThread::msleep(200);
         QString addres = me_overhere_addres_list[k];
-        socket->writeDatagram(Data, QHostAddress(addres), 65201);
+        socket->writeDatagram(Data, QHostAddress(addres), PORT_SERVER);
     }
 }
 
@@ -869,7 +885,7 @@ void MainWindow::NET_send_lvl()
        QByteArray Data;
        Data.append("level:");
        Data.append(s);
-       socket->writeDatagram(Data, temp_addres, 65201);
+       socket->writeDatagram(Data, temp_addres, PORT_SERVER);
    }
 
 }

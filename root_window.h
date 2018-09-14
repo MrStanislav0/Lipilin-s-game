@@ -8,6 +8,7 @@
 #include <QLayout>
 #include <QRgb>
 #include <QMap>
+#include <QUdpSocket>
 
 #include <vector>
 #include <ctime>
@@ -79,6 +80,8 @@ private:
                         "Н", "А"};
 
     bool flag_gamego_on = false;
+
+    QMap<QString, QString> user_list_root;
 
     std::vector<QString> messege;                   // Сообщение, которое закодировано рунами (изначально равно default_text)
     std::vector<QImage> runes;                      // Здесь зранятся "Индексы" рун (строка из "i_j" i - номер исходной руны

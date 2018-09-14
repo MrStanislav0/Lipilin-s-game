@@ -250,7 +250,7 @@ private slots:
                                                                            * оповещение других пользователей о том, что появился новый игрок                   //
                                                                            */                                                                                  //
                                                                                                                                                                //
-    void NET_add_new_player (QString login); /* mode = player                                                                                                  //
+    void NET_add_new_player (QString login, QHostAddress sender); /* mode = player                                                                                                  //
                                               * В случае появления нового пользователя, root шлет всем пользователям сообщение,                                //
                                               * которое содержит action = n, data = login                                                                      //
                                               * Данный метод добавляет нового пользователя                                                                     //
@@ -280,7 +280,7 @@ private slots:
                                                     * шлет root информацию ою этом                                                                             //
                                                     */                                                                                                         //
                                                                                                                                                                //
-    void NET_list_of_user_in_game(QString data);                                                                                                               //
+    void NET_list_of_user_in_game(QString data, QHostAddress sender);                                                                                                               //
     void NET_send_info_for_player(QString address, QString &messeges, QString &codes);                                                                                         //
     void NET_add_intercepted_messege(QString data);                                                                                         //
 

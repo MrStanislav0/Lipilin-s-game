@@ -141,6 +141,7 @@ void home_window::create_img_buttons(vector<vector<QImage>> cut,
 void home_window::add_new_player(QString new_player_login)
 {
 
+
     players.push_back(new_player_login);
 
 
