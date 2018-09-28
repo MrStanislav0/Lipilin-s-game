@@ -93,8 +93,6 @@ private slots:
 private:
     Ui::home_window *ui;
     QImage original_img;
-    QString login_name;
-    vector<QString> players;
     vector <vector<QPB_modify *>> icons;
     int count_777 = 0;
     bool flag_offline = false;

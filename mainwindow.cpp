@@ -11,6 +11,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Мастер-класс Криптография");
+
+     root_address = getIpRoot();
+     if (root_address == "")
+     {
+         QMessageBox::information(this,"Error", "IP адрес рута не задан!");
+     }
+
     ui->Login_button->setEnabled(false);
     QRegExp is_login_variable("[a-zA-Z0-9]{1,20}");
     ui->login_edit->setValidator(new QRegExpValidator(is_login_variable, this));
@@ -21,14 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         QMessageBox::information(this,"Error", "Порт закрыт!");
     }
-    else
-    {
-        QMessageBox::information(this,"Well", "Порт открыт!");
-    }
-    connect(socket, SIGNAL(readyRead()), this, SLOT(NET_datagramm_analysis())); // ловим udаграммыp дейт и анализируем
 
-    ui->edit_ip_root->setText(root_address);
-    ui->lbl_now_use_ip_root->setText(root_address);
+    connect(socket, SIGNAL(readyRead()), this, SLOT(NET_datagramm_analysis())); // ловим udаграммыp дейт и анализируем
 
     QMessageBox::information(this,"Welcome", "Добро пожаловать! Для старта игры введите ваш логин, а также IP-адрес компьютера преподавателя.");
 }
@@ -414,14 +415,7 @@ void MainWindow::NET_a_new_player_come(QString new_player_login, QString sender)
 }
 
 void MainWindow::NET_add_new_player (QString login, QHostAddress sender)
-{
-    if (user_list[sender.toString()] != "")
-    {
-        home_wnd->delete_player(user_list[sender.toString()]);
-    }
-
-    user_list[sender.toString()] = login;
-
+{    
     home_wnd->add_new_player(login);
 }
 
@@ -524,12 +518,6 @@ QString cut_string_befor_simbol(QString &str, char befor)
     str.remove(0, temp+1); // Компенсация пробела
 
     return temp_str;
-}
-
-void MainWindow::on_edit_ip_root_editingFinished()
-{
-    root_address = ui->edit_ip_root->text();
-    ui->lbl_now_use_ip_root->setText(ui->edit_ip_root->text());
 }
 
 QString simbols_in_str_at_positions(QString data, int position, int count)
@@ -913,11 +901,20 @@ void MainWindow::create_source_images()
 
 void MainWindow::NET_add_player (QString login, QHostAddress sender)
 {
-    if (user_list[sender.toString()] != "")
-    {
-        home_wnd->delete_player(user_list[sender.toString()]);
-    }
-
-    user_list[sender.toString()] = login;
     home_wnd->add_new_player(login);
+}
+
+QString MainWindow::getIpRoot()
+{
+    QString IpRoot = "";
+    QFile file("kmzi_program.cfg");
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return IpRoot;
+    QTextStream in(&file);
+    if (!in.atEnd())
+    {
+        IpRoot = in.readLine();
+    }
+    file.close();
+    return IpRoot;
 }

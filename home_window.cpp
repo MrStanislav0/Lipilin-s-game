@@ -20,11 +20,10 @@ home_window::home_window(QString login, QWidget *parent) :
 
     srand(time(NULL));//это для случайных чисел
 
-    login_name = login;
-    ui->lbl_login_value->setText(login_name);
+    ui->lbl_login_value->setText(login);
     ui->lbl_level_value->setText("1");
 
-    add_new_player(login_name);
+    //add_new_player(login);
 
     ui->lbl_new_intercepted_msg->setPixmap(QPixmap::fromImage(QImage(":/images/new_messege.png")).scaled(
                                                ui->lbl_new_intercepted_msg->size()));
@@ -140,12 +139,6 @@ void home_window::create_img_buttons(vector<vector<QImage>> cut,
 
 void home_window::add_new_player(QString new_player_login)
 {
-
-
-    players.push_back(new_player_login);
-
-
-
     ui->user_list->addItem(new_player_login);
 }
 
@@ -156,27 +149,17 @@ void home_window::on_button_overhear_messege_clicked()
 }
 
 void home_window::on_button_inercept_clicked()
-{
-    QString intercepting_player;
+{    
     for (int i = 0; i < (int)ui->user_list->count(); i++)
-    {
-        QListWidgetItem *it = ui->user_list->item(i);
-        if (it->isSelected())
         {
-            intercepting_player = ui->user_list->item(i)->text();
-            break;
-        }
+    if (ui->user_list->item(i)->isSelected())
+            {
+                QString intercepting_player = ui->user_list->item(i)->text();
+                emit this->i_want_intercept(intercepting_player);
+                ui->lbl_overhere_value->setText(intercepting_player);
+                return;
+            }
     }
-
-    int player_size = players.size();
-    for (int i = 0; i < player_size; i++)
-        if (intercepting_player == players[i])
-        {
-            emit this->i_want_intercept(intercepting_player);
-            ui->lbl_overhere_value->setText(intercepting_player);
-            return;
-        }
-
     QMessageBox::information(this, "error", "Такого игрока нет");
 }
 
@@ -378,15 +361,6 @@ void home_window::delete_player(QString login)
         {
              delete ui->user_list->takeItem(i);
              break;
-        }
-    }
-
-    for (int i = 0; i < (int)players.size(); i++)
-    {
-        if (login == players[i])
-        {
-            players.erase(players.begin()+i);
-            break;
         }
     }
 }

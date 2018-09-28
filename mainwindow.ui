@@ -255,63 +255,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>621</x>
-      <y>11</y>
-      <width>222</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="componate_ip_root_all">
-     <item>
-      <layout class="QHBoxLayout" name="componate_ip_root">
-       <item>
-        <widget class="QLabel" name="lbl_ip_root">
-         <property name="text">
-          <string>Введите IP root</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="edit_ip_root"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="componate_info_for_ip_root">
-       <item>
-        <widget class="QLabel" name="lbl_infor_now_use_ip_root">
-         <property name="text">
-          <string>Текущий IP root</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="lbl_now_use_ip_root">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_11">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
