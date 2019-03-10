@@ -6,6 +6,7 @@ make_img_window::make_img_window(QWidget *parent) :
     ui(new Ui::make_img_window)
 {
     ui->setupUi(this);
+    RuneSelected = false;
     set_colors();
     set_runes();
     ui->edit_root_messege->setVisible(false);
@@ -37,8 +38,8 @@ void make_img_window::set_colors()
         pb->setIcon(QIcon(QPixmap::fromImage(temp)));
         pb->setIconSize(pb->size());
         connect(pb, &QPushButton::clicked, [this, pb](){
-            if(!flag_img_choosen)
-                QMessageBox::information(this, "error", "Выберите изображение (справа), да, там еще можно двигать ползунок");
+            if(!RuneSelected)
+                QMessageBox::information(this, "Ошибка", "Выберите изображение справа");
             else
             {
                 ic = pb->j;
@@ -46,7 +47,6 @@ void make_img_window::set_colors()
                 ui->lbl_created_img->setPixmap(QPixmap::fromImage(temp));
             }
         });
-
         hbox->addWidget(pb);
     }
 
@@ -72,6 +72,7 @@ void make_img_window::set_runes()
             ir = pb->i;
             ic = -1;
             flag_img_choosen = true;
+            RuneSelected = true;
             ui->lbl_created_img->setPixmap(QPixmap::fromImage(QImage(runes[pb->i])).scaled(ui->lbl_created_img->size()));
         });
 
@@ -131,6 +132,7 @@ void make_img_window::set_rune(QImage img, int i, int j, QString str)
     root_j = j;
     flag_is_it_root = true;
     flag_img_choosen = true;
+    RuneSelected = true;
     ui->edit_root_messege->setText(str);
 
     ui->edit_root_messege->setVisible(true);

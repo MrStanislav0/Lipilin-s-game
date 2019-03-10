@@ -128,7 +128,7 @@ void MainWindow::on_Login_button_clicked()
         rootwindow();
     else
     {
-		QThread::msleep(200);
+		QThread::msleep(100);
         QByteArray data;
         data.append("0r");
         data.append(ui->login_edit->text());
@@ -350,7 +350,7 @@ void MainWindow::NET_registration_for_root(QString login, QHostAddress sender)
     /* Отправка ответа. Идет в начале, т.к. NET_a_new_player_come отсылает созданному пользователю информацию
      * Он должен быть создан перед тем, как ему отправится информация
      */
-    QThread::msleep(200);
+    QThread::msleep(100);
     QByteArray Data;
     Data.append("1r");
     Data.append(verdict);
@@ -359,7 +359,7 @@ void MainWindow::NET_registration_for_root(QString login, QHostAddress sender)
     if (verdict == "false")
         return;
 
-    QThread::msleep(200);
+    QThread::msleep(100);
     /* В случае, если уникальный, занесение в БД и оповещение других пользователей */
 
 	if (user_list[sender.toString()] != "")
@@ -402,13 +402,13 @@ void MainWindow::NET_a_new_player_come(QString new_player_login, QString sender)
         users = users + it.value() + ' ';
 
         QHostAddress temp_addres(it.key());
-		QThread::msleep(200);
+		QThread::msleep(100);
         QByteArray Data;
         Data.append("1n");
         Data.append(new_player_login);
         socket->writeDatagram(Data, temp_addres, PORT_SERVER);
     }
-	QThread::msleep(200);
+	QThread::msleep(100);
     QByteArray Data;
     Data.append(users);
     socket->writeDatagram(Data, QHostAddress(sender), PORT_SERVER);
@@ -582,7 +582,7 @@ void MainWindow::NET_send_players_inercept_login(QString login)
         NET_no_overhere_for_root(login);
 
     intercept_wnd->set_login_of_intercept(login);
-	QThread::msleep(200);
+	QThread::msleep(100);
     QByteArray Data;
     Data.append("0iyes ");
     Data.append(login);
@@ -598,7 +598,7 @@ void MainWindow::NET_players_intercept_for_root(QString data, QHostAddress sende
     QString action = cut_string_befor_simbol(data, ' ');
     Data.append(action);
     Data.append(' ');
-	QThread::msleep(200);
+	QThread::msleep(100);
     // Поиск в map по значению
     QHostAddress addres;
     QMap<QString, QString>::iterator it;
@@ -632,7 +632,7 @@ void MainWindow::NET_send_intercepted_messege_for_player (QString addres, QStrin
                                              QString s_key, int s_key_size, 
                                              int i, int j, QString algoritm)
 {
-    QThread::msleep(200);
+    QThread::msleep(100);
 	QByteArray Data;
     Data.append("1I");
     QString messege = "";
@@ -673,7 +673,7 @@ void MainWindow::NET_send_info_for_player(QString address, QString &messeges, QS
     QHostAddress temp_addres(address);
 
     QString datagramm = messeges + codes;
-    QThread::msleep(200);
+    QThread::msleep(100);
     QByteArray first_data;
     first_data.append("1S");
     first_data.append(datagramm);
@@ -682,7 +682,7 @@ void MainWindow::NET_send_info_for_player(QString address, QString &messeges, QS
     // В случае, если игра началась, а пользователь опоздал - сразу шлется старт
     if (root_wnd->get_flag_game_on())
     {
-        QThread::msleep(200);
+        QThread::msleep(100);
         int new_level = root_wnd->level;
         QString s = QString::number(new_level);
         QByteArray Data2;
@@ -690,7 +690,7 @@ void MainWindow::NET_send_info_for_player(QString address, QString &messeges, QS
         Data2.append(s);
         socket->writeDatagram(Data2, temp_addres, PORT_SERVER);
 
-        QThread::msleep(200);
+        QThread::msleep(100);
         QByteArray Data;
         Data.append("1g");
         socket->writeDatagram(Data, temp_addres, PORT_SERVER);
@@ -831,7 +831,7 @@ void MainWindow::NET_send_rsa_img(QString code, int e, int n, int i, int j)
 
     for (int k = 0; k < int(me_overhere_addres_list.size()); k++)
     {
-		QThread::msleep(200);
+		QThread::msleep(100);
         QString addres = me_overhere_addres_list[k];
         socket->writeDatagram(Data, QHostAddress(addres), PORT_SERVER);
     }
@@ -869,7 +869,7 @@ void MainWindow::NET_send_lvl()
    for (it = user_list.begin(); it!=user_list.end(); it++)
    {
        QHostAddress temp_addres(it.key());
-		QThread::msleep(200);
+		QThread::msleep(100);
        QByteArray Data;
        Data.append("level:");
        Data.append(s);
@@ -901,6 +901,12 @@ void MainWindow::create_source_images()
 
 void MainWindow::NET_add_player (QString login, QHostAddress sender)
 {
+    if (user_list[sender.toString()] != "")
+    {
+        home_wnd->delete_player(user_list[sender.toString()]);
+    }
+    user_list[sender.toString()] = login;
+
     home_wnd->add_new_player(login);
 }
 

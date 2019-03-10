@@ -57,6 +57,7 @@ signals:
 private:
     Ui::make_img_window *ui;
 
+    bool RuneSelected = false;
     bool flag_img_choosen;          // Флаг - изображение выбрано или нет
     bool flag_is_it_root = false;   // Флаг, для определения того, кто ползуется окном
 

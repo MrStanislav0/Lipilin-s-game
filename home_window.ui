@@ -282,7 +282,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Жмите на рычаг!</string>
+    <string>Крутить</string>
    </property>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget3">
@@ -360,6 +360,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>510</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Рулетка</string>
+   </property>
   </widget>
  </widget>
  <resources/>

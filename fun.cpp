@@ -334,6 +334,10 @@ QImage encrypt_image_p(QImage encrypted_image, vector<int> pb_key)
         vector<QRgb> temp;
         for (int j=0; j<p_size; j++)
         {
+            if (i >= hei*wid)
+            {
+                break;
+            }
             QRgb t;
             t=encrypted_image.pixel(i%wid, i/wid);
             temp.push_back(t);
@@ -370,6 +374,11 @@ QImage encrypt_image_s(QImage encrypted_image, std::vector<vector<int>> sb_key)
         vector<QRgb> temp;
         for (int j=0; j<blok_size; j++)
         {
+            if (i >= cikl)
+            {
+                break;
+            }
+
             QRgb t;
 
             t=encrypted_image.pixel(i%wid, i/wid);
@@ -405,6 +414,11 @@ QImage decrypt_image_s(QImage encrypted_image, std::vector<vector<int>> sb_key)
         vector<QRgb> temp;
         for (int j=0; j<blok_size; j++)
         {
+            if (i >= cikl)
+            {
+                break;
+            }
+
             QRgb t;
             t=encrypted_image.pixel(i%wid, i/wid);
             temp.push_back(t);
