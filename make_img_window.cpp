@@ -11,7 +11,7 @@ make_img_window::make_img_window(QWidget *parent) :
     set_runes();
     ui->edit_root_messege->setVisible(false);
     ui->lbl_root_show_messege->setVisible(false);
-
+    this->setWindowTitle("Выбор картинки");
     QRegExp one_char("[А-Я]{0,1}");
     ui->edit_root_messege->setValidator(new QRegExpValidator(one_char, this));
 }

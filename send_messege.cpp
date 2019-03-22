@@ -17,6 +17,7 @@ send_messege::send_messege(QWidget *parent) :
     ui->img_original->setPixmap(QPixmap::fromImage(Loaded_image.scaled(wid,hei)));
     ui->img_changed->setPixmap(QPixmap::fromImage(Encrypted_image.scaled(wid,hei)));
 
+    this->setWindowTitle("Отправка сообщений");
 
     ui->lbl_algoritm_value->setText("");
 
@@ -552,6 +553,8 @@ void send_messege::set_intercept_info(QImage img, QString code, int i, int j)
 
     now_using_rune_code = code;
     this->set_position_of_img(i-1, j-1);
+
+    this->on_button_send_messege_clicked();
 }
 
 QImage send_messege::encrypt_img_to_intercept(QImage img, QString pkey, int pkey_size,
@@ -670,7 +673,7 @@ void send_messege::up_level(int level)
     ui->button_algoritm_crypto->setEnabled(level>=3);
     ui->button_algoritm_crypto_delete->setEnabled(level>=3);
 
-    ui->button_crypt_rsa->setEnabled(level>=8);
+    ui->button_crypt_rsa->setEnabled(level>=9);
 
     ui->button_choose_img->setEnabled(level>=1);
 

@@ -6,6 +6,7 @@ choose_button::choose_button(QWidget *parent) :
     ui(new Ui::choose_button)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Выбор картинки");
 }
 
 choose_button::~choose_button()
@@ -36,7 +37,7 @@ void choose_button::open_button(QImage img, int i, int j, QString code)
 
     connect(pb, &QPushButton::clicked, [this, pb](){
         if (pb->reverse_img.isNull())
-            QMessageBox::information(this,"Oops", "Я же говорил, что ничего не будет");
+            QMessageBox::information(this,"Ошибка", "Не выбрана картинка!");
         else
         {
             emit i_choose_img(pb->reverse_img, pb->i, pb->j, pb->rune_code);

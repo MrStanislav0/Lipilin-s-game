@@ -53,7 +53,7 @@
         <item>
          <widget class="QLabel" name="lbl_login_show">
           <property name="text">
-           <string>Ваш логин</string>
+           <string>Ваш логин:</string>
           </property>
          </widget>
         </item>
@@ -84,7 +84,7 @@
         <item>
          <widget class="QLabel" name="lbl_level_show">
           <property name="text">
-           <string>Ваш уровень</string>
+           <string>Ваш уровень:</string>
           </property>
          </widget>
         </item>

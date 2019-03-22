@@ -14,9 +14,8 @@ home_window::home_window(QString login, QWidget *parent) :
     ui->setupUi(this);
     connect(ui->button_send_messege,SIGNAL(clicked()),this, SIGNAL(change_wnd_to_swnd()));
     this->setWindowTitle("Мастер-класс Криптография");
-    int level = 1;
-    ui->button_overhear_messege->setEnabled(level>=2);
-    ui->button_assimetry->setEnabled(level>=5);
+    int level = 0;
+    this->up_level(level);
 
     srand(time(NULL));//это для случайных чисел
 
@@ -296,9 +295,11 @@ void home_window::on_button_assimetry_clicked()
 
 void home_window::up_level(int level)
 {
-
     ui->button_overhear_messege->setEnabled(level>=2);
     ui->button_assimetry->setEnabled(level>=7);
+    ui->button_inercept->setEnabled(level>=2);
+    ui->automat->setEnabled(level>=1);
+    ui->button_send_messege->setEnabled(level>=1);
 }
 
 void home_window::set_button_was_sending(int i, int j)

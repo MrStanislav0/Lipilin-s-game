@@ -25,6 +25,8 @@ root_window::root_window(QWidget *parent) :
     ui->button_level_down->setEnabled(false);
     ui->button_level_up->setEnabled(false);
 
+    this->setWindowTitle("Мастер-класс Криптография");
+
 
     // Инициализация соответствия букв и рун (слева буквы, справа руны)
 

@@ -10,7 +10,7 @@ interception::interception(QWidget *parent) :
     ui->scroll_inercept_content->setLayout(lay);
 
     connect(this, SIGNAL(show_info_at_messege(int)), this, SLOT(show_info_at_messege_on_index(int)) );
-
+    this->setWindowTitle("Перехват сообщений");
     int level = 1;
     ui->button_decrypt->setEnabled(level>=4);
 }
@@ -189,8 +189,8 @@ void interception::on_button_decrypt_clicked()
 
     if ((msg.p_key == "unknown") && (msg.algoritm != ""))
     {
-        QMessageBox::information(this, "error", "Ключи неизвестнызашифрованы, использовался алгоритм RSA для передачи ключей"
-                                                "Будет произведена попытка расшифровать на зашифрованных ключах");
+        QMessageBox::information(this, "error", "Ключи неизвестны, использовался алгоритм RSA для передачи ключей"
+                                                "Будет произведена попытка расшифровать на случайном ключе!");
 
         srand(msg.p_key_size+ msg.s_key_size);
         std::vector<int> pk;

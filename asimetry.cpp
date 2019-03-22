@@ -8,6 +8,7 @@ asimetry::asimetry(QWidget *parent) :
     ui(new Ui::asimetry)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Ключи RSA");
     ui->progress_bar_exchange->setVisible(false);
 }
 
