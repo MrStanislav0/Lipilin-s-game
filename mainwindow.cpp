@@ -638,10 +638,7 @@ void MainWindow::NET_players_intercept_for_player(QString data)
     else
     {
         int i = me_overhere_addres_list.indexOf(data);
-        if (i != -1)
-        {
-            me_overhere_addres_list.remove(i);
-        }
+        me_overhere_addres_list.remove(i);
     }
 }
 
