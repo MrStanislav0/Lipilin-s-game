@@ -270,18 +270,20 @@ void MainWindow::NET_datagramm_analysis()
             continue;
 
         QString temp_data = data;
-
-        if (temp_data.left(6) == "level:")
+        if (data.size() > 6)
         {
-            QString temp = "";
-            temp_data.replace(0, 6, temp);
-
-            send_messege_wnd->up_level(temp_data.toInt());
-            home_wnd->set_lvl_label(temp_data);
-            home_wnd->up_level(temp_data.toInt());
-            intercept_wnd->up_level(temp_data.toInt());
-
-            continue;
+            if (temp_data.left(6) == "level:")
+            {
+                QString temp = "";
+                temp_data.replace(0, 6, temp);
+    
+                send_messege_wnd->up_level(temp_data.toInt());
+                home_wnd->set_lvl_label(temp_data);
+                home_wnd->up_level(temp_data.toInt());
+                intercept_wnd->up_level(temp_data.toInt());
+    
+                continue;
+            }
         }
 
         char who = QCharRef(data[0]).toLatin1();
