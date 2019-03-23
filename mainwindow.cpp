@@ -935,6 +935,10 @@ void MainWindow::NET_add_player (QString data, QHostAddress sender)
      QString UserIp = cut_string_befor_simbol(data, ' ');
     if (user_list[UserIp] != "")
     {
+        if (i != -1)
+        {
+            me_overhere_addres_list.remove(i);
+        }
         home_wnd->delete_player(user_list[UserIp]);
     }
     user_list[UserIp] = UserName;
