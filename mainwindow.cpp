@@ -622,19 +622,25 @@ void MainWindow::NET_players_intercept_for_root(QString data, QHostAddress sende
         if (it.value()==data)
         {
             addres = QHostAddress(it.key());
+            Data.append(sender.toString());
+            socket->writeDatagram(Data, addres, PORT_SERVER);
             break;
         }
     }
-	
-    Data.append(sender.toString());
-    socket->writeDatagram(Data, addres, PORT_SERVER);
 }
 
 void MainWindow::NET_players_intercept_for_player(QString data)
 {
     QString action = cut_string_befor_simbol(data, ' '); // Поиск да или нет
     if (action == "yes")
+    {
+        int i = me_overhere_addres_list.indexOf(data);
+        if (i != -1)
+        {
+            me_overhere_addres_list.remove(i);
+        }
         me_overhere_addres_list.push_back(data);
+    }
     else
     {
         int i = me_overhere_addres_list.indexOf(data);
